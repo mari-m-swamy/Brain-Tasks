@@ -20,7 +20,7 @@ phases:
       - echo "Logging in to Amazon ECR..."
       - aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 558316745366.dkr.ecr.us-east-1.amazonaws.com
       - echo "setting up kubeconfig for EKS..."
-      - aws eks --region us-east-1 update-kubeconfig --name brain-tasks-cluster
+      - aws eks update-kubeconfig --region us-east-1 --name brain-tasks-cluster
       - echo "=== CHECK KUBECTL ==="
       - kubectl version --client
       - echo "=== TRY GET NODES ==="
