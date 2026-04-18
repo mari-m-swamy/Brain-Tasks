@@ -1,0 +1,16 @@
+{
+  "name": "brain-tasks-app",
+  "version": "1.0.0",
+  "description": "Simple Express App running on port 3000",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.18.2"
+  }
+}
+
+

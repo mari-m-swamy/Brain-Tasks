@@ -1,0 +1,40 @@
+version: 0.2
+
+env:
+  variables:
+    IMAGE_REPO_NAME: brain-tasks-app
+    AWS_DEFAULT_REGION: us-east-1
+
+phases:
+  install:
+    commands:
+      - echo "Starting install phase..."
+      - yum install -y unzip || true
+
+  pre_build:
+    commands:
+      - echo "Checking AWS CLI version..."
+      - aws --version
+      - echo "Logging in to Amazon ECR..."
+      - aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 558316745366.dkr.ecr.us-east-1.amazonaws.com
+      - echo "setting up kubeconfig for EKS..."
+      - aws eks --region us-east-1 update-kubeconfig --name brain-tasks-cluster
+      - kubectl get nodes
+
+  build:
+    commands:
+      - echo "Building Docker image..."
+      - docker build -t brain-tasks-app .
+      - docker tag brain-tasks-app:latest 558316745366.dkr.ecr.us-east-1.amazonaws.com/brain-tasks-app:latest
+
+  post_build:
+    commands:
+      - echo "Pushing image..."
+      - docker push 558316745366.dkr.ecr.us-east-1.amazonaws.com/brain-tasks-app:latest
+      - echo "Deploying to EKS..."
+      - kubectl apply -f deployment.yaml
+      - kubectl apply -f service.yaml
+      - echo "=== VERIFY PODS ==="
+      - kubectl get pods
+      - echo "=== VERIFY SERVICES ==="
+      - kubectl get svc
