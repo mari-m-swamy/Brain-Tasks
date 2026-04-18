@@ -17,11 +17,21 @@ phases:
       - aws --version
       - echo "Checking identity"
       - aws sts get-caller-identity
+      - echo "=== LIST CLUSTERS ==="
+      - aws eks list-clusters --region us-east-1
+
+     - echo "=== DESCRIBE CLUSTER ==="
+     - aws eks describe-cluster --name brain-tasks-cluster --region us-east-1
+
       - echo "Logging in to Amazon ECR..."
       - aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 558316745366.dkr.ecr.us-east-1.amazonaws.com
       - echo "setting up kubeconfig for EKS..."
       - aws eks --region us-east-1 update-kubeconfig --name brain-tasks-cluster
-      - kubectl get nodes
+      - echo "=== CHECK KUBECTL ==="
+      - kubectl version --client
+
+     - echo "=== TRY GET NODES ==="
+     - kubectl get nodes
 
   build:
     commands:
