@@ -40,11 +40,13 @@ phases:
       - echo "Checking files"
       - ls -la
       - cat deployment.yaml
-      - echo "Deploying to EKS..."
-      - kubectl apply -f deployment.yaml --v=9
-      - kubectl apply -f service.yaml
-      - echo "=== TRY GET NODES ==="
+      - echo "===== DEBUG ====="
+      - kubectl config current-context
+      - kubectl cluster-info
       - kubectl get nodes
+      - echo "Deploying to EKS..."
+      - kubectl apply -f deployment.yaml --v=9 --dry-run=server
+      - kubectl apply -f service.yaml
       - echo "=== VERIFY PODS ==="
       - kubectl get pods
       - echo "=== VERIFY SERVICES ==="
