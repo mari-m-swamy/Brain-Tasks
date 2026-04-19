@@ -40,8 +40,11 @@ phases:
       - echo "Checking files"
       - ls -la
       - cat deployment.yaml
-      - echo "===== DEBUG ====="
-      - kubectl config current-context
+      - echo "Setting kubeconfig..."
+      - aws eks update-kubeconfig --region us-east-1 --name brain-tasks-cluster
+      - echo "Checking identity..."
+      - aws sts get-caller-identity
+      - echo "Testing cluster..."
       - kubectl cluster-info
       - kubectl get nodes
       - echo "Deploying to EKS..."
