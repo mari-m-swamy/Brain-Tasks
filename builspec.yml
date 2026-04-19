@@ -19,7 +19,7 @@ phases:
       - aws sts get-caller-identity
       - echo "Login to ECR"
       - ACCOUNT_ID=$(aws sts get-caller-identity --query Account --output text)
-      - aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 558316745366.dkr.ecr.$us-east-1.amazonaws.com
+      - aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 558316745366.dkr.ecr.us-east-1.amazonaws.com
       - echo "Build Docker image"
       - docker build -t brain-tasks-app .
       - docker tag brain-tasks-app:latest 558316745366.dkr.ecr.us-east-1.amazonaws.com/brain-tasks-app:latest
