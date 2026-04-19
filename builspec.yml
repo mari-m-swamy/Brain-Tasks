@@ -40,7 +40,7 @@ phases:
       - ls -la
       - cat deployment.yaml
       - echo "Deploying to EKS..."
-      - kubectl apply -f deployment.yaml
+      - kubectl apply -f deployment.yaml -v=8
       - kubectl apply -f service.yaml
       - echo "=== TRY GET NODES ==="
       - kubectl get nodes
