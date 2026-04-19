@@ -28,12 +28,13 @@ phases:
 
   build:
     commands:
+      - ls -la
       - echo "Building Docker image..."
       - docker build -t brain-tasks-app .
-      - docker tag brain-tasks-app:latest 558316745366.dkr.ecr.us-east-1.amazonaws.com/brain-tasks-app:latest
 
   post_build:
     commands:
+      - docker tag brain-tasks-app:latest 558316745366.dkr.ecr.us-east-1.amazonaws.com/brain-tasks-app:latest
       - echo "Pushing image..."
       - docker push 558316745366.dkr.ecr.us-east-1.amazonaws.com/brain-tasks-app:latest
       - echo "Checking files"
