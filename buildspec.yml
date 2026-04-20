@@ -30,13 +30,19 @@ phases:
       - docker push 558316745366.dkr.ecr.us-east-1.amazonaws.com/brain-tasks-app:latest
 
   post_build:
-    commands:
-      - echo "Configure kubeconfig"
-      - aws eks update-kubeconfig --region us-east-1 --name brain-tasks-cluster
+  commands:
+    - echo "Configure kubeconfig"
+    - aws eks update-kubeconfig --region us-east-1 --name brain-tasks-cluster
+    - kubectl apply -f deployment.yaml
+    - kubectl apply -f service.yaml
+    - echo "Writing imagedefinitions.json"
+    - printf '[{"name":"brain-tasks-app","imageUri":"%s"}]' 
+      558316745366.dkr.ecr.us-east-1.amazonaws.com/brain-tasks-app:latest 
+      > imagedefinitions.json
 
-      - echo "Test cluster access"
-      - kubectl get nodes
+artifacts:
+  files:
+    - imagedefinitions.json
+    - deployment.yaml
+    - service.yaml
 
-      - echo "Deploy app"
-      - kubectl apply -f deployment.yaml
-      - kubectl apply -f service.yaml
