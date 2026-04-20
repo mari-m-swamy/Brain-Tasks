@@ -1,0 +1,6 @@
+[
+  {
+    "name": "brain-tasks-app",
+    "imageUri": "558316745366.dkr.ecr.us-east-1.amazonaws.com/brain-tasks-app:latest"
+  }
+]
