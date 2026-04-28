@@ -4,45 +4,48 @@ env:
   variables:
     IMAGE_REPO_NAME: brain-tasks-app
     AWS_DEFAULT_REGION: us-east-1
+    ACCOUNT_ID: "558316745366"
+    ECR_URI: "558316745366.dkr.ecr.us-east-1.amazonaws.com/brain-tasks-app"
+    CLUSTER_NAME: brain-tasks-cluster
 
 phases:
   install:
     commands:
-      - echo Installing kubectl
+      - echo "Installing kubectl..."
       - curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
-      - sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
-      - chmod +x kubectl
+      - install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
+      - kubectl version --client
 
   pre_build:
     commands:
-      - echo "AWS Identity"
+      - echo "Verifying AWS Identity..."
       - aws sts get-caller-identity
-      - echo "Login to ECR"
-      - ACCOUNT_ID=$(aws sts get-caller-identity --query Account --output text)
-      - aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 558316745366.dkr.ecr.us-east-1.amazonaws.com
-      - echo "Build Docker image"
-      - docker build -t brain-tasks-app . --no-cache --progress=plain 2>&1
-      - docker tag brain-tasks-app:latest 558316745366.dkr.ecr.us-east-1.amazonaws.com/brain-tasks-app:latest
+      - echo "Logging in to ECR..."
+      - aws ecr get-login-password --region $AWS_DEFAULT_REGION | docker login --username AWS --password-stdin $ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com
+      - echo "Login successful"
 
   build:
     commands:
-      - echo "Push image"
-      - docker push 558316745366.dkr.ecr.us-east-1.amazonaws.com/brain-tasks-app:latest
+      - echo "Building Docker image..."
+      - docker build -t $IMAGE_REPO_NAME:latest .
+      - docker tag $IMAGE_REPO_NAME:latest $ECR_URI:latest
+      - echo "Pushing image to ECR..."
+      - docker push $ECR_URI:latest
 
   post_build:
-  commands:
-    - echo "Configure kubeconfig"
-    - aws eks update-kubeconfig --region us-east-1 --name brain-tasks-cluster
-    - kubectl apply -f deployment.yaml
-    - kubectl apply -f service.yaml
-    - echo "Writing imagedefinitions.json"
-    - printf '[{"name":"brain-tasks-app","imageUri":"%s"}]' 
-      558316745366.dkr.ecr.us-east-1.amazonaws.com/brain-tasks-app:latest 
-      > imagedefinitions.json
+    commands:
+      - echo "Configuring kubeconfig..."
+      - aws eks update-kubeconfig --region $AWS_DEFAULT_REGION --name $CLUSTER_NAME
+      - echo "Deploying to Kubernetes..."
+      - kubectl apply -f deployment.yaml
+      - kubectl apply -f service.yaml
+      - kubectl rollout status deployment/brain-tasks-app
+      - echo "Writing imagedefinitions.json..."
+      - printf '[{"name":"brain-tasks-app","imageUri":"%s"}]' $ECR_URI:latest > imagedefinitions.json
+      - echo "Deploy complete!"
 
 artifacts:
   files:
     - imagedefinitions.json
     - deployment.yaml
     - service.yaml
-

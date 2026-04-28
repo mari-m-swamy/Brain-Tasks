@@ -1,12 +1,14 @@
-FROM node:18
+FROM node:18-alpine
 
 WORKDIR /app
 
-COPY package*.json ./
-RUN npm install
+# Copy dist folder
+COPY dist/ ./dist/
 
-COPY . .
+# Install serve to host static files
+RUN npm install -g serve
 
 EXPOSE 3000
 
-CMD ["npm", "start"]
+# Serve the dist folder on port 3000
+CMD ["serve", "-s", "dist", "-l", "3000"]
