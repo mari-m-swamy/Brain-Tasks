@@ -21,7 +21,7 @@ phases:
       - echo "Verifying AWS Identity..."
       - aws sts get-caller-identity
       - echo "Logging in to ECR..."
-      - aws ecr get-login-password --region $AWS_DEFAULT_REGION | docker login --username AWS --password-stdin $ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com
+      - aws ecr get-login-password --region $AWS_DEFAULT_REGION | docker login --username AWS --password-stdin 558316745366.dkr.ecr.us-east-1.amazonaws.com
       - echo "Login successful"
 
   build:
