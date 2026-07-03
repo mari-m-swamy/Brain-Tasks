@@ -80,4 +80,4 @@ Before starting, install:
 •	kubectl
 •	eksctl
 Configure AWS credentials:
-aws configure
+AWS Configure
