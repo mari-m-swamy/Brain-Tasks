@@ -1,9 +1,11 @@
 **Brain Tasks App - End-to-End DevOps Deployment on AWS EKS**
 
 **Project Overview**
+
 This project demonstrates an end-to-end DevOps implementation for the Brain Tasks App using AWS services and Kubernetes.
 
 **The project covers:**
+
 •	Dockerizing the application
 •	Storing Docker images in AWS ECR
 •	Provisioning Kubernetes cluster using Amazon EKS
@@ -12,6 +14,7 @@ This project demonstrates an end-to-end DevOps implementation for the Brain Task
 •	Monitoring build and deployment logs using CloudWatch
 
 **Project Architecture**
+
 GitHub Repository
         │
         ▼
@@ -39,6 +42,7 @@ LoadBalancer Service
 Browser (Port 3000)
 ________________________________________
 **Repository Structure**
+
 Brain-Tasks-App/
 │
 ├── src/
@@ -52,6 +56,7 @@ Brain-Tasks-App/
 └── screenshots/
 ________________________________________
 **Technologies Used**
+
 •	AWS EKS
 •	AWS ECR
 •	AWS CodeBuild
@@ -65,7 +70,9 @@ ________________________________________
 •	AWS CLI
 ________________________________________
 **Prerequisites**
+
 Before starting, install:
+
 •	Git
 •	Docker
 •	Node.js
